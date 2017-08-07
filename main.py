@@ -18,60 +18,60 @@ Builder.load_string('''
 
 <RootWidget>
     id:tictac
-    rows: 5
+    orientation:'vertical'
+    rows: 3
     
     Label:
         text: 'Tic-Tac-Toe Game' 
-        
-    BoxLayout:
-        Cstm:
+    
+    GridLayout:
+        cols:3
+        rows:3
+        Button:
             id: set_1
             display: 1
-            on_press: self.text = root.whos_turn(self.display)
-        Cstm:
+            text: 
+            on_press: root.main('set_1');
+        Button:
             id: set_2
             display: 2
-            on_press: self.text = root.whos_turn(self.display)
-        Cstm:
+            text:
+            on_press: root.main('set_2')
+        Button:
             id: set_3
             display: 3
-            on_press: self.text = root.whos_turn(self.display)
-    BoxLayout:
-        Cstm:
+            text:
+            on_press: root.main('set_3')
+        Button:
             id: set_4
             display: 4
-            on_press: self.text = root.whos_turn(self.display)
-        Cstm:
+            text:
+            on_press: root.main('set_4')
+        Button:
             id: set_5
             display: 5
-            on_press: self.text = root.whos_turn(self.display)
-        Cstm:
+            text:
+            on_press: root.main('set_5')
+        Button:
             id: set_6
             display: 6
-            on_press: self.text = root.whos_turn(self.display)
-    BoxLayout:
-        Cstm:
+            text:
+            on_press: root.main('set_6')
+        Button:
             id: set_7
             display: 7
-            on_press: self.text = root.whos_turn(self.display)
-        Cstm:
+            text:
+            on_press: root.main('set_7')
+        Button:
             id: set_8
             display: 8
-            on_press: self.text = root.whos_turn(self.display)
-        Cstm:
+            text:
+            on_press: root.main('set_8')
+        Button:
             id: set_9
             display: 9
-            on_press: self.text = root.whos_turn(self.display)
-    BoxLayout:
-        Label:
-            text: 'O = 1' 
-        Button:
-            text: 'Start Game'
-            on_press: #root.start_game()
-        Label:
-            text: 'X = 5'
-        
-
+            text:
+            on_press: root.main('set_9')
 
 ''')
 
@@ -80,44 +80,55 @@ class RootWidget(GridLayout):
     
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
-        self.turn = None # x or o
-        self.color = None
-
-    
-
-    def cpu_brain(self):
-        pass
-
-    def start_game(self):
-        root_widget = self.ids['set_1']
-        root_widget.add_widget()
-
-    def whos_turn(self, btn_id):
-        set_id = 'set_{}'.format(btn_id)
-        button = self.ids[set_id]
-        button.disabled = True
+        self.player_one = False
+        self.player_cpu = False
+        self.coordinate = []
         
         
-        if self.turn == 'x' or self.turn == '':
-            self.turn = 'o'
-            self.color = (0,9,0,1)
+         
+    #check if whos turn
+    def turn(self):
+        
+        one = self.player_one
+        cpu = self.player_cpu
+
+        if(one == False):
+            #print('done move for one')
+            self.player_one = True
+            self.player_cpu = False
+            return 'O'
         else:
-            self.turn = 'x'
-            self.color = (9,0,0,1)
-        button.background_color = self.color   
-        return self.turn
-                
+            #print('done move for cpu')
+            self.player_cpu = True
+            self.player_one = False
+            return 'X'
+
+    def list_move(self, num, mark):
+        self.coordinate.append({num : mark})
+        print(self.coordinate)
+        
+    
+    def whos_win(self):
+        list_win = [(1,2,3),(4,5,6),(7,8,9),(1,4,7),(2,5,8),(3,6,9),(1,5,9)(7,5,3)]
         
         
+    
+    def main(self, ids):
         
-            
+        x = self.ids[ids]
+        x.disabled = True
+        x.text = self.turn()
         
-  
+        num = ids
+        mark = x.text
+        
+        self.list_move(x.display, mark)
+        
+        
         
         
 
-
-
+         
 
 class MainApp(App):
 
